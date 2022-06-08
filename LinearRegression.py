@@ -1,5 +1,27 @@
+import random
+
 import numpy as np
-from sklearn.model_selection import train_test_split
+
+
+def splitData(x, y, trainPercent):
+    random.seed(0)
+    trainNum = int(np.round(len(x) * trainPercent))
+    x_train = []
+    y_train = []
+
+    for i in range(trainNum):
+        rand = int(round(random.random() * (len(x) - 1)))
+        x_train.append(x[rand])
+        np.delete(x, rand)
+        y_train.append(y[rand])
+        np.delete(y, rand)
+    return np.array(x_train), x, np.array(y_train), y
+
+    # x_train = x[:trainNum]
+    # x_test = x[trainNum:]
+    # y_train = y[:trainNum]
+    # y_test = y[trainNum:]
+    # return x_train, x_test, y_train, y_test
 
 
 def calcMSE(y_test: np.ndarray, y_pred: np.ndarray):
@@ -52,7 +74,10 @@ def linearRegressionPredict(x_test: np.ndarray, w: np.ndarray):
 def main():
     arrData = readData()
 
-    X_train, X_test, y_train, y_test = train_test_split(arrData[:, :-1], arrData[:, -1], train_size=0.75, random_state=0)
+    # If the below function were used (from sklearn), due to the different randomizer, the MSE would be 28.9 (currently 38.7)
+    # X_train, X_test, y_train, y_test = train_test_split(arrData[:, :-1], arrData[:, -1], train_size=0.75, random_state=0)
+
+    X_train, X_test, y_train, y_test = splitData(arrData[:, :-1], arrData[:, -1], 0.75)
     w = linearRegressionFit(X_train, y_train)
     y_pred = linearRegressionPredict(X_test, w)
     print("MSE score: " + str(calcMSE(y_test, y_pred)))

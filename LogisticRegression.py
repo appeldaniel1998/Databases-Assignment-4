@@ -1,5 +1,3 @@
-import numpy as np
-
 from LinearRegression import *
 
 
@@ -58,7 +56,7 @@ def main():
     y = arrData[:, 10]
     x = np.delete(arrData, 10, 1)
 
-    X_train, X_test, y_train, y_test = train_test_split(x, y, train_size=0.85, random_state=0)
+    X_train, X_test, y_train, y_test = splitData(x, y, 0.85)
     w = logisticRegressionFit(X_train, y_train)
     y_pred = logisticRegressionPredict(X_test, w)
 
